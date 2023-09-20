@@ -1,0 +1,65 @@
+textarea[b-jerwvlik1o] {
+    font-size: 2px;
+    font-family: 'Courier New';
+    min-width: 367px;
+    max-width: 367px;
+    min-height: 300px;
+    max-height: 300px;
+    overflow: hidden;
+}
+
+.txt20[b-jerwvlik1o] {
+    font-size: 9.5px;
+}
+
+.txt50[b-jerwvlik1o] {
+    font-size: 4px;
+}
+
+.txt100[b-jerwvlik1o] {
+    font-size: 2px;
+
+}
+
+.txt200[b-jerwvlik1o] {
+    font-size: 1px;
+}
+
+.container[b-jerwvlik1o] {
+    text-align: center;
+    font-weight: bold;
+    background-color: magenta;
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 20px;
+    background: rgb(131,58,180);
+    background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);
+}
+
+.block[b-jerwvlik1o] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction:column;
+}
+
+.insider[b-jerwvlik1o] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: white;
+    text-align:center;
+    border-radius: 5px;
+    border: solid black;
+    padding: 20px;
+}
+
+button[b-jerwvlik1o] {
+    border: solid 3px black;
+    margin: 20px;
+}
+
+.unclicked[b-jerwvlik1o] {
+    background-color: rgba(255, 255, 255, 0.3);
+}

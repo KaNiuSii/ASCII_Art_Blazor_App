@@ -1,0 +1,193 @@
+﻿@page "/"
+
+@using Microsoft.AspNetCore.Components.Forms
+@using System.IO
+@using SixLabors.ImageSharp
+@using SixLabors.ImageSharp.Processing
+@using SixLabors.ImageSharp.Formats.Png
+@using System.Text
+
+@inject IJSRuntime JSRuntime
+
+<PageTitle>ASCII Art Generator</PageTitle>
+
+<div class="container block">
+    <div class="row">
+        <!-- Size buttons -->
+        <div class="col-md-12 ">
+            <button @onclick="()=>SetSize(20)" class=@(asciiSize == 20 ? "btn btn-light" : "btn unclicked")> 20x60 </button>
+            <button @onclick="()=>SetSize(50)" class=@(asciiSize == 50 ? "btn btn-light" : "btn unclicked")> 50x150</button>
+            <button @onclick="()=>SetSize(100)" class=@(asciiSize == 100 ? "btn btn-light" : "btn unclicked")>100x300</button>
+            <button @onclick="()=>SetSize(200)" class=@(asciiSize == 200 ? "btn btn-light" : "btn unclicked")>200x600</button>
+        </div>
+    </div>
+    <br />
+    <div class="row mt-3">
+        <!-- Dropdown for ASCII options -->
+        <div class="col-md-12 insider">
+            <label>
+                Select an Option
+                <select @bind="selectedOption" class="form-select">
+                    <!-- ASCII options here -->
+                    <option value=" .-oO@@">Simple and Classic -  .-oO@@</option>
+                    <option value=" 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ">Alphanumeric Only -  0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ</option>
+                    <option value=" .,!;:-=+">Punctuation-heavy -  .,!;:-=+</option>
+                    <option value=" .'`,^:;~-_+i!lI;:,\|/()1{}[]?JtfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@@$">Expanded set -  .'`,^:;~-_+i!lI;:,\|/()1{}[]?JtfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@@$</option>
+                    <option value="_^~*:;+={}%#&">Demo - _^~*:;+={}%#&</option>
+                    <option value=" .-+1234567890$@@">Numeric-focused -  .-+1234567890$@@</option>
+                    <option value=" .-+=*<>{}[]()|^%$#@@&">Upper-case Alphabets and Special Characters -  .-+=*{}[]()|^%$#@@&</option>
+                    <option value=" .-:;+=xXoO8@@%$">Mixed Case Alphabets - .-:;+=xXoO8@@%$</option>
+                    <option value=" .-,¢$">Dollar and Cents -  .-,¢$</option>
+                    <option value=" .,-+x*oO8%@@#">Geometric Shapes -  .,-+x*oO8%@@#</option>
+                </select>
+            </label>
+        </div>
+    </div>
+    <br />
+    <div class="insider">
+        <label>Choose an Image<br />
+            <InputFile OnChange="@UploadImage" />
+        </label>
+    </div>   
+    <br />
+    @if (loaded)
+    {
+        <!-- Final Button -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <button @onclick="FinalButtonClicked" class="@(generating == false ? "btn btn-light" : "btn btn-light")">@(generating == false ? "Generate" : "Generating")</button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Loading or Waiting message -->
+        <div class="row mt-3">
+            <div class="col-md-12 insider">
+                <label>Please wait while the image is being loaded. Larger images may take longer.</label>
+            </div>
+        </div>
+    }
+    <br />
+    @if (!string.IsNullOrEmpty(textBoxValue))
+    {
+        <!-- Text area for ASCII output -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <textarea @bind="textBoxValue" class="form @(asciiSize == 50 ? "txt50" : asciiSize == 100 ? "txt100" : asciiSize == 20 ? "txt20" : "txt200")" rows="@asciiSize + 1" cols="@asciiSize*3 + 1" spellcheck="false" readonly="readonly"></textarea>
+            </div>
+            <div class="col-md-12 mt-2">
+                <button @onclick="CopyToClipboard" class="btn btn-light">Copy to Clipboard</button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private string selectedOption = " .-oO@@";
+    private string textBoxValue = "";
+    private int[,]? grayValues;
+    private int asciiSize = 100;
+    private bool loaded = false;
+    private bool generating = false;
+
+    private async Task CopyToClipboard()
+    {
+        await JSRuntime.InvokeVoidAsync("copyTextToClipboard", textBoxValue);
+    }
+
+    private void SetSize(int newSize)
+    {
+        textBoxValue = "";
+        asciiSize = newSize;
+    }
+
+    private async Task FinalButtonClicked()
+    {
+        try
+        {
+            if (originImage != null)
+            {
+                ResizeImage(originImage);
+                ProcessASCII();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Optionally update the UI to reflect the error
+        }
+    }
+
+    private void ProcessASCII()
+    {
+        generating = true;
+        if (grayValues == null || selectedOption.Length == 0)
+            return;
+
+        StringBuilder asciiChars = new StringBuilder();
+
+        string originalString = selectedOption;
+
+        string reversedString = new string(originalString.Reverse().ToArray());
+        // Convert the grayscale values to ASCII characters
+        for (int i = 0; i < asciiSize; i++)
+        {
+            for (int j = 0; j < asciiSize; j++)
+            {
+                int index = Math.Min(grayValues[j, i] * (selectedOption.Length - 1) / 255, selectedOption.Length - 1);
+                char character = reversedString[index];
+                asciiChars.Append(character, 3);
+            }
+            asciiChars.Append('\n');
+        }
+        textBoxValue = asciiChars.ToString();
+        generating = false;
+    }
+
+    private Image<Rgba32>? originImage;
+
+    private void ResizeImage(Image<Rgba32> image)
+    {
+        var newSize = new Size(asciiSize);
+        image.Mutate(x => x.Resize(newSize));
+
+        grayValues = new int[newSize.Width, newSize.Height];
+
+        // Convert to grayscale
+        for (int y = 0; y < newSize.Height; y++)
+        {
+            for (int x = 0; x < newSize.Width; x++)
+            {
+                var pixel = image[x, y];
+                int gray = (int)(pixel.R * 0.3 + pixel.G * 0.59 + pixel.B * 0.11);
+                grayValues[x, y] = gray;
+            }
+        }
+    }
+
+    private async Task UploadImage(InputFileChangeEventArgs e)
+    {
+        loaded = false;
+        try
+        {
+            var imageFile = e.File;
+            if (imageFile == null)
+                return;
+
+            var buffer = new byte[imageFile.Size];
+            long maxFileSize = 40 * 1024 * 1024;  // 40 MB
+            await imageFile.OpenReadStream(maxFileSize).ReadAsync(buffer);
+            using (var image = Image.Load<Rgba32>(buffer))
+            {
+                originImage = image.Clone();
+            }
+            loaded = true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Optionally update the UI to reflect the error
+        }
+    }
+}

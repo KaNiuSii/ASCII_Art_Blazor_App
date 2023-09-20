@@ -1,0 +1,37 @@
+is_global = true
+build_property.TargetFramework = net6.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = browser
+build_property.RootNamespace = ASCII_Art_Project
+build_property.RootNamespace = ASCII_Art_Project
+build_property.ProjectDir = D:\BlazorASCIIArtDeploy\ASCII Art Project\ASCII Art Project\
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = D:\BlazorASCIIArtDeploy\ASCII Art Project\ASCII Art Project
+build_property._RazorSourceGeneratorDebug = 
+
+[D:/BlazorASCIIArtDeploy/ASCII Art Project/ASCII Art Project/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/BlazorASCIIArtDeploy/ASCII Art Project/ASCII Art Project/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/BlazorASCIIArtDeploy/ASCII Art Project/ASCII Art Project/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-jerwvlik1o
+
+[D:/BlazorASCIIArtDeploy/ASCII Art Project/ASCII Art Project/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-3u5dtttvif
+
+[D:/BlazorASCIIArtDeploy/ASCII Art Project/ASCII Art Project/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-rb2mmsl1xe

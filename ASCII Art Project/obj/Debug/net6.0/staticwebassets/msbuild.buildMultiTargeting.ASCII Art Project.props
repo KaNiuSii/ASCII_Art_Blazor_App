@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\ASCII Art Project.props" />
+</Project>
